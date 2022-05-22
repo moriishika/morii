@@ -88,10 +88,8 @@ const BooksContainer = styled.div`
 
 const Home: NextPage = () => {
   const [isHover, setHoverStatus] = useState<Boolean>(false);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let mixer;
-
     const clock = new THREE.Clock();
     const container = containerRef;
     const light = new DirectionalLight(0xf403fc);
@@ -103,10 +101,12 @@ const Home: NextPage = () => {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputEncoding = THREE.sRGBEncoding;
-    container.current.replaceChild(
-      renderer.domElement,
-      container.current.children[0]
-    );
+    if (null !== container.current) {
+      container.current.replaceChild(
+        renderer.domElement,
+        container.current.children[0]
+      );
+    }
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
 
@@ -146,10 +146,9 @@ const Home: NextPage = () => {
         model.castShadow = true;
         model.receiveShadow = true;
         scene.add(model);
+        let mixer = new THREE.AnimationMixer(model);
 
-        mixer = new THREE.AnimationMixer(model);
-
-        animate();
+        animate(mixer);
       },
       undefined,
       function (e) {
@@ -164,9 +163,7 @@ const Home: NextPage = () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
-    function animate() {
-      requestAnimationFrame(animate);
-
+    function animate(mixer: THREE.AnimationMixer) {
       const delta = clock.getDelta();
 
       mixer.update(delta);
@@ -175,7 +172,6 @@ const Home: NextPage = () => {
 
       // stats.update();
 
-      
       renderer.render(scene, camera);
     }
   }, []);
