@@ -220,7 +220,7 @@ const Home: NextPage = () => {
         {isHover && (
           <div>
             <TopAvatar src="/moriishikaa.png"></TopAvatar>
-            <h4>Hai, welcome!</h4>
+            <h4>Hai, welcome my name is morii!</h4>
           </div>
         )}
         <PageIndicator>
